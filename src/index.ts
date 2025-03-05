@@ -8,8 +8,8 @@ const options = autofixCommand()
 
 try {
     const contents = autofixReadFile(options.source);
-    const diff = await autofixClaudeDiff(contents, options.apiKey);
-    console.log(diff);
+    const claudeMessage = await autofixClaudeDiff(contents, options.apiKey);
+    console.log(claudeMessage);
 } catch (error) {
     console.error('\x1b[31m%s\x1b[0m', 'Error: ' + (error instanceof Error ? error.message : String(error)));
     process.exit(1);
@@ -18,7 +18,9 @@ try {
 /*
 Possible improvements:
 ----------------------
-- lower the LLM api cost by reducing the php code inside prompt to the bare minimum. 
-    - Depens on how much we want rely on the LLM on detecting the vulnerability as opposed to fixing it.
-    - The fact that aikido dev would likely flag before suggesting an autofix suggests that this would be te way to go?
+- Lower LLM cost by: 
+    - This vulnerability can be detected using static analysis, therefore we know exactly which lines are vulnerable. Only send those for LLM to fix.
+    - Doing diff locally with real git diff.
+- Better prompt engineering depending on the desired format and real world use case 
+- Give the cli some love
 */
